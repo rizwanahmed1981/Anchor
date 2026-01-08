@@ -1,55 +1,38 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!-- Sync Impact Report:
+     Version change: N/A (initial version) → 1.0.0
+     Added sections: All principles and sections from user input
+     Templates requiring updates: N/A (new constitution)
+     Follow-up TODOs: None
+-->
+# Password Manager Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### Zero-Knowledge by Design
+All sensitive user data must be encrypted client-side. The system must be architected such that operators cannot access user secrets, even with full database access. No server-side decryption paths may exist. If a feature weakens zero-knowledge, it must not be built.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+### Identity-First, Not Password-First
+Passwords are treated as one credential type among many. The system must natively support multiple secret and credential types. Design decisions must assume a future where passwords are deprecated.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### Security Is Proactive
+The product must actively reduce user risk. Passive storage without guidance is insufficient. The system must analyze usage, exposure, and access patterns to suggest safer actions. Warnings without remediation guidance are considered incomplete features.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+### Explainability Is Mandatory
+Security decisions must be explainable in human language. Users should understand where their data is, when it is decrypted, and how recovery works. No "magic" security. If engineers cannot explain it simply, it is not finished.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### Least Privilege Everywhere
+Access to secrets must be minimal, scoped, and time-bound where possible. Sharing must always be intentional and reversible. Default access must be restrictive, not permissive.
 
-### [PRINCIPLE_6_NAME]
+### No Dark UX Patterns
+No misleading security messaging. No artificial lock-in. No fear-based prompts. Trust is a product feature.
 
+## Architectural Constraints
+These constraints guide all technical decisions. Client-first encryption model, Event-based auditability, Deterministic, testable cryptographic flows, Modular secret types, Explicit trust boundaries. Shortcuts that improve speed at the cost of safety are forbidden.
 
-[PRINCIPLE__DESCRIPTION]
-
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
-
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
-
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
-
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+## Target Users and Success Metrics
+Primary users: Developers, Security-conscious individuals, Small technical teams. Secondary users: Families, Non-technical users (after maturity). The product must never alienate power users to simplify UX. Success is measured when: Users demonstrably reduce credential risk over time, Users understand their security posture, Power users can automate securely without workarounds, Trust is earned through behavior, not claims.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
+Transparency and Accountability: Threat model must be documented and public. Security incidents must be documented clearly. Changes affecting security must be communicated. Silence is considered a failure mode. Constitution supersedes all other practices. Amendments require documentation, approval, migration plan. All PRs/reviews must verify compliance. Complexity must be justified.
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
-
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2026-01-08 | **Last Amended**: 2026-01-08
