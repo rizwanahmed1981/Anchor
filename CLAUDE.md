@@ -509,3 +509,10 @@ helm install todo ./helm/todo-chart
 ---
 
 **Remember**: Specifications are the single source of truth. When in doubt, check the specs. When specs are unclear, request updates. Never improvise.
+
+## Active Technologies
+- Python 3.14 (as per constitution) + Tesseract OCR engine, OpenCV for image preprocessing, FastAPI for API endpoints, Pydantic for data validation (002-ocr-functionality)
+- PostgreSQL via SQLModel (Neon serverless DB as per constitution), file storage for temporary image processing (002-ocr-functionality)
+
+## Recent Changes
+- 002-ocr-functionality: Added Python 3.14 (as per constitution) + Tesseract OCR engine, OpenCV for image preprocessing, FastAPI for API endpoints, Pydantic for data validation

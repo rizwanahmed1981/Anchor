@@ -1,0 +1,315 @@
+openapi: 3.0.3
+info:
+  title: OCR Functionality API
+  description: API for OCR processing of image-based documents
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+    description: Local development server
+paths:
+  /{user_id}/ocr/process:
+    post:
+      summary: Upload and process an image for OCR
+      description: Upload an image file and initiate OCR processing
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the user initiating the OCR job
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Image file to process (JPEG, PNG, TIFF, PDF)
+                language:
+                  type: string
+                  description: Language code for OCR processing (default: eng)
+                  default: eng
+              required:
+                - file
+      responses:
+        '200':
+          description: OCR job created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OCRJobResponse'
+        '400':
+          description: Invalid file format or size exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '422':
+          description: File validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /{user_id}/ocr/status/{job_id}:
+    get:
+      summary: Get OCR job status
+      description: Check the status of an OCR processing job
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the user who initiated the job
+          schema:
+            type: string
+        - name: job_id
+          in: path
+          required: true
+          description: The ID of the OCR job
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OCR job status retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OCRJobStatus'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Access denied to this job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: OCR job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /{user_id}/ocr/result/{job_id}:
+    get:
+      summary: Get OCR result
+      description: Retrieve the extracted text from a completed OCR job
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the user who initiated the job
+          schema:
+            type: string
+        - name: job_id
+          in: path
+          required: true
+          description: The ID of the OCR job
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OCR result retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OCRResult'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Access denied to this job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: OCR job not found or result not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: OCR job not completed yet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+  /{user_id}/ocr/export/{job_id}:
+    post:
+      summary: Export OCR result
+      description: Export the extracted text in a specific format
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: The ID of the user who initiated the job
+          schema:
+            type: string
+        - name: job_id
+          in: path
+          required: true
+          description: The ID of the OCR job
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                format:
+                  type: string
+                  enum: [txt, docx, pdf]
+                  description: Export format for the extracted text
+              required:
+                - format
+      responses:
+        '200':
+          description: Exported file content
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid export format
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized access
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Access denied to this job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: OCR job not found or result not available
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      security:
+        - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    OCRJobResponse:
+      type: object
+      properties:
+        job_id:
+          type: string
+          description: Unique identifier for the OCR job
+        status:
+          type: string
+          enum: [pending, processing, completed, failed, cancelled]
+          description: Current status of the OCR job
+        estimated_completion:
+          type: string
+          format: date-time
+          description: Estimated completion time for the job
+      required:
+        - job_id
+        - status
+
+    OCRJobStatus:
+      type: object
+      properties:
+        job_id:
+          type: string
+          description: Unique identifier for the OCR job
+        status:
+          type: string
+          enum: [pending, processing, completed, failed, cancelled]
+          description: Current status of the OCR job
+        progress:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Progress percentage of the OCR job
+        result_available:
+          type: boolean
+          description: Whether the result is ready to be retrieved
+        error_message:
+          type: string
+          description: Error message if the job failed
+
+    OCRResult:
+      type: object
+      properties:
+        text:
+          type: string
+          description: The extracted text content
+        confidence_score:
+          type: number
+          minimum: 0
+          maximum: 100
+          description: Overall confidence in the extraction accuracy
+        language_detected:
+          type: string
+          description: Language detected in the document
+        processing_time_ms:
+          type: integer
+          description: Time taken for OCR processing in milliseconds
+        word_confidence_scores:
+          type: array
+          items:
+            type: object
+            properties:
+              word:
+                type: string
+              confidence:
+                type: number
+                minimum: 0
+                maximum: 100
+          description: Confidence scores for individual words
+      required:
+        - text
+        - confidence_score
+
+    Error:
+      type: object
+      properties:
+        detail:
+          type: string
+          description: Error message
+      required:
+        - detail
