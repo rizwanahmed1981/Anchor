@@ -1,0 +1,36 @@
+{
+  "name": "anchor-password-manager",
+  "version": "0.1.0",
+  "description": "Next-generation identity and secret management platform with zero-knowledge security",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "jest",
+    "build": "tsc",
+    "lint": "eslint src/**/*.ts",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "password-manager",
+    "security",
+    "zero-knowledge",
+    "identity-management"
+  ],
+  "author": "Anchor Team",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^5.0.0",
+    "webcrypto-core": "^1.7.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "jest": "^29.0.0",
+    "ts-jest": "^29.0.0",
+    "ts-node": "^10.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
